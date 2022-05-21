@@ -92,63 +92,63 @@
     function test(name) { lastFeatureTested = name; return features[name]; }
 
     try {
-      (minVers || test('let')) && eval('let a = "a"; const b = 5');
-      (minVers || test('arrow')) && eval('(y = 0) => -y');
-      (minVers || test('for_of')) && eval(`for (a of [1, 2]) {}`);
-      (minVers || test('map')) && eval(`new Map(); new Set();`);
-      (minVers || test('class')) && eval(`class MyClass { constructor() {} }`);
-      (minVers || test('promise')) && eval('new Promise(resolve => resolve()).catch()');
-      (minVers || test('symbol')) && eval('Symbol("symbol")');
-      (minVers || test('def_params')) && eval('function foo(a = 5) {}');
-      (minVers || test('rest_param')) && eval('function foo(...a) {}');
-      (minVers || test('string')) &&
+      (test('let') || minVers) && eval('let a = "a"; const b = 5');
+      (test('arrow') || minVers) && eval('(y = 0) => -y');
+      (test('for_of') || minVers) && eval(`for (a of [1, 2]) {}`);
+      (test('map') || minVers) && eval(`new Map(); new Set();`);
+      (test('class') || minVers) && eval(`class MyClass { constructor() {} }`);
+      (test('promise') || minVers) && eval('new Promise(resolve => resolve()).catch()');
+      (test('symbol') || minVers) && eval('Symbol("symbol")');
+      (test('def_params') || minVers) && eval('function foo(a = 5) {}');
+      (test('rest_param') || minVers) && eval('function foo(...a) {}');
+      (test('string') || minVers) &&
         !(''.includes && ''.startsWith && ''.endsWith) && throwMsg('Missing string methods');
-      (minVers || test('array')) &&
+      (test('array') || minVers) &&
         !(Array.from && [].keys && [].find && [].findIndex) && throwMsg('Missing array methods');
-      (minVers || test('template')) && eval('let a = 5; let b =`x${a}y`;');
-      (minVers || test('ds')) && eval('const [x, y] = [1, 2]');
+      (test('template') || minVers) && eval('let a = 5; let b =`x${a}y`;');
+      (test('ds') || minVers) && eval('const [x, y] = [1, 2]');
 
       if (minVers) { tb_bc_info.es = 2015; if (minVers === 2015) minVers = 0; }
 
-      (minVers || test('exp')) && eval('let a = 2 ** 7;');
-      (minVers || test('array2016')) && ![].includes && throwMsg('Missing array 2016 methods');
+      (test('exp') || minVers) && eval('let a = 2 ** 7;');
+      (test('array2016') || minVers) && ![].includes && throwMsg('Missing array 2016 methods');
 
       if (minVers) { tb_bc_info.es = 2016; if (minVers === 2016) minVers = 0; }
 
-      (minVers || test('string2017')) && !(''.padStart && ''.padEnd) && throwMsg('Missing string 2017 methods');
-      (minVers || test('object')) && !(Object.entries && Object.values) && throwMsg('Missing Object methods');
-      (minVers || test('async')) && eval('async function foo() {}');
+      (test('string2017') || minVers) && !(''.padStart && ''.padEnd) && throwMsg('Missing string 2017 methods');
+      (test('object') || minVers) && !(Object.entries && Object.values) && throwMsg('Missing Object methods');
+      (test('async') || minVers) && eval('async function foo() {}');
 
       if (minVers) { tb_bc_info.es = 2017; if (minVers === 2017) minVers = 0; }
 
-      (minVers || test('promise_finally')) && eval('new Promise(resolve => resolve()).finally()');
-      (minVers || test('rest_prop')) && eval('let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };');
-      (minVers || test('for_await')) && eval('async function foo() { for await (const a of []) {} }');
-      (minVers || test('regex')) && eval(String.raw`/(?<=f)\p{L}+./su.test("foo\n")`);
+      (test('promise_finally') || minVers) && eval('new Promise(resolve => resolve()).finally()');
+      (test('rest_prop') || minVers) && eval('let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };');
+      (test('for_await') || minVers) && eval('async function foo() { for await (const a of []) {} }');
+      (test('regex') || minVers) && eval(String.raw`/(?<=f)\p{L}+./su.test("foo\n")`);
 
       if (minVers) { tb_bc_info.es = 2018; if (minVers === 2018) minVers = 0; }
 
-      (minVers || test('array2019')) && !([].flat && [].flatMap) && throwMsg('Missing array 2019 methods');
-      (minVers || test('object2019')) && !(Object.fromEntries) && throwMsg('Missing Object 2019 methods');
-      (minVers || test('string2019')) && !(''.trimStart && ''.trimEnd) && throwMsg('Missing string 2019 methods');
-      (minVers || test('catch')) && !('try { var a = 5; } catch {}');
+      (test('array2019') || minVers) && !([].flat && [].flatMap) && throwMsg('Missing array 2019 methods');
+      (test('object2019') || minVers) && !(Object.fromEntries) && throwMsg('Missing Object 2019 methods');
+      (test('string2019') || minVers) && !(''.trimStart && ''.trimEnd) && throwMsg('Missing string 2019 methods');
+      (test('catch') || minVers) && !('try { var a = 5; } catch {}');
 
       if (minVers) { tb_bc_info.es = 2019; if (minVers === 2019) minVers = 0; }
 
-      (minVers || test('null')) && !eval('null?.a; undefined ?? 7;');
-      (minVers || test('bigint')) && eval('123n + 456n;');
-      (minVers || test('all_settled')) && !Promise.allSettled && throwMsg('Missing Promise.allSettled');
-      (minVers || test('global_this')) && globalThis !== window && throwMsg('Missing Promise.global_this');
+      (test('null') || minVers) && !eval('null?.a; undefined ?? 7;');
+      (test('bigint') || minVers) && eval('123n + 456n;');
+      (test('all_settled') || minVers) && !Promise.allSettled && throwMsg('Missing Promise.allSettled');
+      (test('global_this') || minVers) && globalThis !== window && throwMsg('Missing Promise.global_this');
 
       if (minVers) { tb_bc_info.es = 2020; if (minVers === 2021) minVers = 0; }
 
-      (minVers || test('promise_any')) && !Promise.any && throwMsg('Missing Promise.any');
-      (minVers || test('underscores')) && eval('let a = 123_456;');
-      (minVers || test('logical')) && eval('let a = true; let b = false; b &&= a; b ||= a; b ??= a;');
+      (test('promise_any') || minVers) && !Promise.any && throwMsg('Missing Promise.any');
+      (test('underscores') || minVers) && eval('let a = 123_456;');
+      (test('logical') || minVers) && eval('let a = true; let b = false; b &&= a; b ||= a; b ??= a;');
 
       if (minVers) { tb_bc_info.es = 2021; if (minVers === 2021) minVers = 0; }
 
-      (minVers || test('regex2020')) && eval(String.raw`/(\bB\b).*(\bD\b)/d.exec('A B C D E')`);
+      (test('regex2022') || minVers) && eval(String.raw`/(\bB\b).*(\bD\b)/d.exec('A B C D E')`);
     }
     catch (e) {
       tb_bc_info.msg = tb_bc_info.msg || (lastFeatureTested ? 'Feature failed: ' + lastFeatureTested :

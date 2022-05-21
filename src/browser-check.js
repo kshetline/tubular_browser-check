@@ -39,6 +39,7 @@
   var url = script.getAttribute('data-bc-fail-url');
   var minEsVers = parseInt(script.getAttribute('data-bc-min-es') || '0');
   var versionList = script.getAttribute('data-bc-vers');
+  var v = { IE: 0, LegacyEdge: 1, Chrome: 2, Firefox: 3, Safari: 4 };
   versionList = versionList ? split(versionList, ',') : [];
   var args = [];
 
@@ -77,10 +78,24 @@
       tb_bc_info.browser = 'IE';
       tb_bc_info.version = ieVersion;
 
-      if (args[0] === 0)
+      if (args[v.IE] === 0)
         tb_bc_info.msg = 'Internet Explorer is not supported';
-      else if (ieVersion && args[0] > 0 && ieVersion < args[0])
-        tb_bc_info.msg = highlightVersion(ua, re, 'Internet Explorer', args[0]);
+      else if (ieVersion && args[v.IE] > 0 && ieVersion < args[v.IE])
+        tb_bc_info.msg = highlightVersion(ua, re, 'Internet Explorer', args[v.IE]);
+
+      return;
+    }
+
+    var legacyEdgeVersion = parseInt(((re = /(\bEdge\/)(\d+)([.\d]+)?/).exec(ua) || za)[2]);
+
+    if (legacyEdgeVersion) {
+      tb_bc_info.browser = 'Legacy Edge';
+      tb_bc_info.version = legacyEdgeVersion;
+
+      if (args[v.LegacyEdge] === 0)
+        tb_bc_info.msg = 'Legacy Edge is not supported';
+      else if (legacyEdgeVersion && args[v.LegacyEdge] > 0 && legacyEdgeVersion < args[v.LegacyEdge])
+        tb_bc_info.msg = highlightVersion(ua, re, 'Legacy Edge', args[v.LegacyEdge]);
 
       return;
     }
@@ -91,10 +106,28 @@
       tb_bc_info.browser = 'Chrome';
       tb_bc_info.version = chromeVersion;
 
-      if (args[1] === 0)
+      if (args[v.Chrome] === 0)
         tb_bc_info.msg = 'Chrome is not supported, nor related Chromium-derived browsers';
-      else if (chromeVersion && args[1] > 0 && chromeVersion < args[1])
-        tb_bc_info.msg = highlightVersion(ua, re, 'Chrome', args[1]);
+      else if (chromeVersion && args[v.Chrome] > 0 && chromeVersion < args[v.Chrome])
+        tb_bc_info.msg = highlightVersion(ua, re, 'Chrome', args[v.Chrome]);
+
+      if (navigator.userAgentData && navigator.userAgentData.brands && navigator.userAgentData.brands.length > 1) {
+        var brands = navigator.userAgentData.brands;
+        var brand = brands[brands.length - 1];
+
+        if (brand.brand)
+          tb_bc_info.browser = 'Chrome variant (' + brand.brand + ')';
+      }
+      else if (/\bEdg\//.test(ua))
+        tb_bc_info.browser = 'Chrome variant (Windows Edge)';
+      else if (/\bOPR\/\b/.test(ua))
+        tb_bc_info.browser = 'Chrome variant (Opera)';
+      else if (/\b(SamsungBrowser|SAMSUNG)\b/.test(ua))
+        tb_bc_info.browser = 'Chrome variant (Samsung)';
+      else if (/\bUCBrowser\//.test(ua))
+        tb_bc_info.browser = 'Chrome variant (UC Browser)';
+      else if (/\bYaBrowser\//.test(ua))
+        tb_bc_info.browser = 'Chrome variant (Yandex)';
 
       return;
     }
@@ -105,10 +138,10 @@
       tb_bc_info.browser = 'Firefox';
       tb_bc_info.version = firefoxVersion;
 
-      if (args[2] === 0)
+      if (args[v.Firefox] === 0)
         tb_bc_info.msg = 'Firefox is not supported';
-      else if (firefoxVersion && args[2] > 0 && firefoxVersion < args[2])
-        tb_bc_info.msg = highlightVersion(ua, re, 'Firefox', args[2]);
+      else if (firefoxVersion && args[v.Firefox] > 0 && firefoxVersion < args[v.Firefox])
+        tb_bc_info.msg = highlightVersion(ua, re, 'Firefox', args[v.Firefox]);
 
       return;
     }
@@ -119,13 +152,13 @@
       safariVersion = 0;
 
     if (safariVersion) {
-      tb_bc_info.browser = 'Firefox';
+      tb_bc_info.browser = 'Safari';
       tb_bc_info.version = safariVersion;
 
-      if (args[3] === 0)
+      if (args[v.Safari] === 0)
         tb_bc_info.msg = 'Safari is not supported';
-      else if (safariVersion && args[3] > 0 && safariVersion < args[3])
-        tb_bc_info.msg = highlightVersion(ua, re, 'Safari', args[3]);
+      else if (safariVersion && args[v.Safari] > 0 && safariVersion < args[v.Safari])
+        tb_bc_info.msg = highlightVersion(ua, re, 'Safari', args[v.Safari]);
     }
   })();
 
@@ -201,10 +234,13 @@
       (test('regex2022') || minVers) && eval('/(\\bB\\b).*(\\bD\\b)/d.exec("A B C D E")');
     }
     catch (e) {
-      tb_bc_info.msg = tb_bc_info.msg || (lastFeatureTested ? 'Feature failed: ' + lastFeatureTested :
-        e.message || e.toString());
+      tb_bc_info.msg = tb_bc_info.msg || (minVers > 0 ? '' :
+        lastFeatureTested ? 'Feature failed: ' + lastFeatureTested : e.message || e.toString());
     }
   }
+
+  if (!tb_bc_info.msg && minEsVers > 0 && tb_bc_info.es < minEsVers)
+    tb_bc_info.msg = 'Insufficient ES level. Needed: ' + minEsVers + ', found: ' + tb_bc_info.es;
 
   if (tb_bc_info.msg && url) {
     // Try to clear body and remove other scripts before forwarding to fail URL.

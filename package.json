@@ -1,8 +1,15 @@
 {
-  "name": "@tubular/broswer-check",
-  "version": "1.0.0",
+  "name": "@tubular/browser-check",
+  "version": "0.0.1-alpha",
   "description": "Check for compatibility of browser versions and features",
+  "author": "Kerry Shetline <kerry@shetline.com>",
+  "license": "MIT",
   "main": "src/browser-check.js",
+  "keywords": [
+    "browser",
+    "compatibility",
+    "caniuse"
+  ],
   "scripts": {
     "lint": "eslint \"src/**/*.js\"",
     "lint-fix": "eslint \"src/**/*.js\" --fix"

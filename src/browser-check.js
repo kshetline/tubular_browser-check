@@ -113,7 +113,10 @@
       return;
     }
 
-    var safariVersion = parseFloat(((re = /(\bVersion\/)(\d+)(\.\d+)(.*\bSafari\/\d+)/).exec(ua) || za)[2]);
+    var safariVersion = parseFloat(((re = /(\bVersion\/)(\d+(?:\.\d+)?)([.\d]+)?(.*\bSafari\/\d+)/).exec(ua) || za)[2]);
+
+    if (/\b(Android|Linux)\b/.test(ua))
+      safariVersion = 0;
 
     if (safariVersion) {
       tb_bc_info.browser = 'Firefox';

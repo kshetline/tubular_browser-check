@@ -76,7 +76,7 @@
     var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+)([.\d]+)?/.exec(ua);
     var appleWebKitVersion = awkRegex ? parseInt(awkRegex[2]) : 0;
     var ieVersion = parseInt(((re = /(\bMSIE )(\d+)/).exec(ua) ||
-                              (re = /(\bWindows NT\b.+\brv:0)(\d+)/).exec(ua) || za)[2]);
+                              (re = /(\bWindows NT\b.+\brv:)(\d+)/).exec(ua) || za)[2]);
 
     if (/\b(Firefox|Chrome|HeadlessChrome)\b/.test(ua))
       ieVersion = 0;
@@ -179,7 +179,7 @@
   })();
 
   function test(name) { lastFeatureTested = name; return features[name]; }
-  function tally(s) { tb_bc_info.otherFeatures += (tb_bc_info.otherFeatures ? ',' : '') + (s || lastFeatureTested); }
+  function tally(s) { tb_bc_info.otherFeatures += (tb_bc_info.otherFeatures ? ', ' : '') + (s || lastFeatureTested); }
 
   if (!tb_bc_info.msg || minEsVers || featureCount > 0) {
     try {
@@ -262,44 +262,65 @@
       var elem = document.createElement('div');
       var style = elem && elem.style;
       var other = features.other;
+      var canvas;
 
-      if (test('flex') || other) {
-        if (style.flex != null && style.flexFlow != null)
-          tally();
-        else if (!other)
+      if (other || features.canvas || features.webgl || features.webgl2)
+        canvas = document.createElement('canvas');
+
+      if (test('audio') || other ? (window.Audio ? tally() : !other) : false)
+        return;
+
+      if (test('flex') || other ? (style.flex != null && style.flexFlow != null ? tally() : !other) : false)
+        return true;
+
+      if (test('grid') || other ? (style.grid != null && style.gridTemplateRows != null ? tally() : !other) : false)
+        return true;
+
+      try {
+        if (test('local_storage') || other ?
+          ('localStorage' in window && window.localStorage != null ? tally() : !other) : false)
+          return true;
+      }
+      catch (e) {
+        if (test('local_storage'))
           return true;
       }
 
-      if (test('grid') || other) {
-        if (style.grid != null && style.gridTemplateRows != null)
-          tally();
-        else if (!other)
+      if (test('geo') || other ? ('geolocation' in navigator ? tally() : !other) : false)
+        return true;
+
+      if (test('workers') || other ? (window.Worker ? tally() : !other) : false)
+        return true;
+
+      if (test('canvas') || other ? (canvas && canvas.getContext ? tally() : !other) : false)
+        return true;
+
+      if (test('canvas_text') || other) {
+        var context = canvas && canvas.getContext && canvas.getContext('2d');
+        var hasText = context && typeof context.fillText === 'function';
+
+        if (canvas)
+          canvas = document.createElement('canvas'); // Reset for further tests
+
+        if (hasText ? tally() : !other)
           return true;
       }
 
-      if (test('webgl2') || other) {
-        try {
-          if (document.createElement('canvas').getContext('webgl2')) {
-            if (other)
-              tally('webgl');
+      if (test('webgl2') || other ? (canvas && canvas.getContext &&
+          canvas.getContext('webgl2') ? tally() : !other) : false)
+        return true;
 
-            tally();
-          }
-          else if (!other)
-            return true;
-        }
-        catch (e) { return true; }
-      }
+      if (test('webgl') || other ? (canvas && canvas.getContext &&
+          (/\bwebgl2\b/.test(tb_bc_info.otherFeatures) || canvas.getContext('webgl')) ? tally() : !other) : false)
+        return true;
 
-      if ((test('webgl') || other) && tb_bc_info.otherFeatures.indexOf('webgl2') < 0) {
-        try {
-          if (document.createElement('canvas').getContext('webgl'))
-            tally();
-          else if (!other)
-            return true;
-        }
-        catch (e) { return true; }
-      }
+      if (test('video') || other ? (document.createElement('video').canPlayType ? tally() : !other) : false)
+        return true;
+
+      // noinspection RedundantIfStatementJS
+      if (test('av_input') || other ?
+        ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia ? tally() : !other) : false)
+        return true;
 
       return false;
     })();
@@ -307,6 +328,9 @@
     if (missing && !tb_bc_info.msg)
       tb_bc_info.msg = 'Missing: ' + lastFeatureTested;
   }
+
+  if (tb_bc_info.otherFeatures && [].sort)
+    tb_bc_info.otherFeatures = tb_bc_info.otherFeatures.split(', ').sort().join(', ');
 
   if (!tb_bc_info.msg && minEsVers > 0 && tb_bc_info.es < minEsVers)
     tb_bc_info.msg = 'Insufficient ES level. Needed: ' + minEsVers + ', found: ' + tb_bc_info.es;

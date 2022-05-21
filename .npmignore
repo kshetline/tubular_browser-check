@@ -1,3 +1,5 @@
 /.idea
+/src
 *.html
 .eslint*
+rollup.config.js

@@ -1,23 +1,29 @@
 {
   "name": "@tubular/browser-check",
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "description": "Check for compatibility of browser versions and features",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "license": "MIT",
-  "main": "src/browser-check.js",
+  "main": "dist/browser-check.js",
   "keywords": [
     "browser",
     "compatibility",
     "caniuse"
   ],
   "scripts": {
+    "build": "rimraf dist/ && rollup -c -m",
+    "prepublishOnly": "npm run build",
     "lint": "eslint \"src/**/*.js\"",
     "lint-fix": "eslint \"src/**/*.js\" --fix"
   },
-  "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3"
+    "eslint-config-standard": "^16.0.3",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.74.1",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }

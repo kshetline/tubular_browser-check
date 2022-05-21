@@ -126,7 +126,7 @@
           tb_bc_info.browser = 'Chrome variant (' + brand.brand + ')';
       }
       else if (/\bEdg\//.test(ua))
-        tb_bc_info.browser = 'Chrome variant (Windows Edge)';
+        tb_bc_info.browser = 'Chrome variant (Edge)';
       else if (/\bOPR\/\b/.test(ua))
         tb_bc_info.browser = 'Chrome variant (Opera)';
       else if (/\b(SamsungBrowser|SAMSUNG)\b/i.test(ua))

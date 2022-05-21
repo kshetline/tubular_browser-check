@@ -6,7 +6,7 @@
 
   <title>Browser Check</title>
 
-  <script src="browser-check.js" data-bc-globals data-bc-min-es="-1"></script>
+  <script src="browser-check.js" data-bc-globals data-bc-min-es="-1" data-bc-features="other"></script>
   <style>
     body {
       background-color: white;
@@ -22,6 +22,7 @@
     document.write('Browser: ' + window.tb_bc_info.browser + '<br>\n');
     document.write('Browser version: ' + window.tb_bc_info.version + '<br>\n');
     window.tb_bc_info.es && document.write('ECMAScript capability level: ' + window.tb_bc_info.es + '<br>\n');
+    window.tb_bc_info.otherFeatures && document.write('Other features: ' + window.tb_bc_info.otherFeatures + '<br>\n');
     window.tb_bc_info.msg && document.write('Message: ' + window.tb_bc_info.msg + '<br>\n');
   </script>
 </body>

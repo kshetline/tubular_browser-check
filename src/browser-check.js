@@ -35,16 +35,21 @@
   }
 
   var script = document.currentScript || document.querySelector('script[data-bc-vers]') ||
-    document.querySelector('script[data-bc-min-es]') || document.querySelector('script[data-bc-globals]');
+    document.querySelector('script[data-bc-min-es]') || document.querySelector('script[data-bc-globals]') ||
+    document.querySelector('script[data-bc-features]');
   var url = script.getAttribute('data-bc-fail-url');
   var minEsVers = parseInt(script.getAttribute('data-bc-min-es') || '0');
+  var v = { IE: 0, LegacyEdge: 1, Chrome: 2, Firefox: 3, Safari: 4, AppleWebKit: 5 };
   var versionList = script.getAttribute('data-bc-vers');
-  var v = { IE: 0, LegacyEdge: 1, Chrome: 2, Firefox: 3, Safari: 4 };
   versionList = versionList ? split(versionList, ',') : [];
   var args = [];
 
-  for (var i = 0; i < versionList.length; ++i)
-    args.push(parseFloat(versionList[i]));
+  for (var i = 0; i < versionList.length && i < v.length; ++i) {
+    if (i < versionList.length)
+      args.push(parseFloat(versionList[i]));
+    else
+      args.push(-1);
+  }
 
   if (minEsVers === 5)
     minEsVers = 2009;
@@ -57,17 +62,19 @@
   var features = {};
   var lastFeatureTested = '';
   var za = ['0', '0', '0'];
-  var tb_bc_info = { browser: 'Unrecognized', version: null, es: 3, msg: '' };
+  var tb_bc_info = { browser: 'Unrecognized', version: null, es: 3, msg: '', otherFeatures: '' };
   var featuresOpt = script.getAttribute('data-bc-features');
   var featureList = (featuresOpt ? split(featuresOpt, ',') : []);
   var featureCount = featureList.length;
-  var re;
 
   for (i = 0; i < featureCount; ++i)
     features[trim(featureList[i])] = true;
 
   (function () {
     var ua = navigator.userAgent;
+    var re;
+    var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+)([.\d]+)?/.exec(ua);
+    var appleWebKitVersion = awkRegex ? parseInt(awkRegex[2]) : 0;
     var ieVersion = parseInt(((re = /(\bMSIE )(\d+)/).exec(ua) ||
                               (re = /(\bWindows NT\b.+\brv:0)(\d+)/).exec(ua) || za)[2]);
 
@@ -115,14 +122,14 @@
         var brands = navigator.userAgentData.brands;
         var brand = brands[brands.length - 1];
 
-        if (brand.brand)
+        if (brand.brand && !/^Google\b/.test(brand.brand))
           tb_bc_info.browser = 'Chrome variant (' + brand.brand + ')';
       }
       else if (/\bEdg\//.test(ua))
         tb_bc_info.browser = 'Chrome variant (Windows Edge)';
       else if (/\bOPR\/\b/.test(ua))
         tb_bc_info.browser = 'Chrome variant (Opera)';
-      else if (/\b(SamsungBrowser|SAMSUNG)\b/.test(ua))
+      else if (/\b(SamsungBrowser|SAMSUNG)\b/i.test(ua))
         tb_bc_info.browser = 'Chrome variant (Samsung)';
       else if (/\bUCBrowser\//.test(ua))
         tb_bc_info.browser = 'Chrome variant (UC Browser)';
@@ -151,20 +158,30 @@
     if (/\b(Android|Linux)\b/.test(ua))
       safariVersion = 0;
 
-    if (safariVersion) {
-      tb_bc_info.browser = 'Safari';
-      tb_bc_info.version = safariVersion;
+    if (safariVersion || appleWebKitVersion) {
+      tb_bc_info.browser = safariVersion ? 'Safari' : 'AppleWebKit';
+      tb_bc_info.version = safariVersion || appleWebKitVersion;
 
       if (args[v.Safari] === 0)
         tb_bc_info.msg = 'Safari is not supported';
+      else if (args[v.AppleWebKit] === 0)
+        tb_bc_info.msg = 'AppleWebKit browsers are not supported';
       else if (safariVersion && args[v.Safari] > 0 && safariVersion < args[v.Safari])
         tb_bc_info.msg = highlightVersion(ua, re, 'Safari', args[v.Safari]);
+      else if (safariVersion && args[v.AppleWebKit] > 0 && safariVersion < args[v.AppleWebKit])
+        tb_bc_info.msg = highlightVersion(ua, awkRegex, 'AppleWebKit/Safari', args[v.AppleWebKit]);
+
+      if (/\bCriOS\b/.test(ua))
+        tb_bc_info.browser = 'Chrome on iOS';
+      else if (/\bFxiOS\b/.test(ua))
+        tb_bc_info.browser = 'Firefox on iOS';
     }
   })();
 
-  if (!tb_bc_info.msg || minEsVers || featureCount > 0) {
-    function test(name) { lastFeatureTested = name; return features[name]; }
+  function test(name) { lastFeatureTested = name; return features[name]; }
+  function tally(s) { tb_bc_info.otherFeatures += (tb_bc_info.otherFeatures ? ',' : '') + (s || lastFeatureTested); }
 
+  if (!tb_bc_info.msg || minEsVers || featureCount > 0) {
     try {
       var prom = (typeof Promise !== 'undefined' ? Promise : {});
 
@@ -237,6 +254,58 @@
       tb_bc_info.msg = tb_bc_info.msg || (minVers > 0 ? '' :
         lastFeatureTested ? 'Feature failed: ' + lastFeatureTested : e.message || e.toString());
     }
+  }
+
+  // Test for CSS capabilities and other features
+  if (featureCount > 0) {
+    var missing = (function () {
+      var elem = document.createElement('div');
+      var style = elem && elem.style;
+      var other = features.other;
+
+      if (test('flex') || other) {
+        if (style.flex != null && style.flexFlow != null)
+          tally();
+        else if (!other)
+          return true;
+      }
+
+      if (test('grid') || other) {
+        if (style.grid != null && style.gridTemplateRows != null)
+          tally();
+        else if (!other)
+          return true;
+      }
+
+      if (test('webgl2') || other) {
+        try {
+          if (document.createElement('canvas').getContext('webgl2')) {
+            if (other)
+              tally('webgl');
+
+            tally();
+          }
+          else if (!other)
+            return true;
+        }
+        catch (e) { return true; }
+      }
+
+      if ((test('webgl') || other) && tb_bc_info.otherFeatures.indexOf('webgl2') < 0) {
+        try {
+          if (document.createElement('canvas').getContext('webgl'))
+            tally();
+          else if (!other)
+            return true;
+        }
+        catch (e) { return true; }
+      }
+
+      return false;
+    })();
+
+    if (missing && !tb_bc_info.msg)
+      tb_bc_info.msg = 'Missing: ' + lastFeatureTested;
   }
 
   if (!tb_bc_info.msg && minEsVers > 0 && tb_bc_info.es < minEsVers)

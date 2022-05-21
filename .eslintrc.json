@@ -1,0 +1,76 @@
+{
+  "env": {
+    "browser": true
+  },
+  "extends": [
+    "standard"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 5,
+    "sourceType": "script"
+  },
+  "rules": {
+    "brace-style": [
+      "error",
+      "stroustrup",
+      {
+        "allowSingleLine": true
+      }
+    ],
+    "camelcase": "off",
+    "curly": "off",
+    "indent": [
+      "error",
+      2,
+      {
+        "ignoreComments": true,
+        "SwitchCase": 1
+      }
+    ],
+    "multiline-ternary": "off",
+    "no-control-regex": "off",
+    "no-empty": "off",
+    "no-eval": "off",
+    "no-labels": "off",
+    "no-mixed-operators": "off",
+    "no-multi-spaces": "off",
+    "no-new": "off",
+    "no-return-assign": "off",
+    "no-template-curly-in-string": "off",
+    "no-unexpected-multiline": "off",
+    "no-unused-expressions": "off",
+    "no-var": "off",
+    "object-curly-newline": "off",
+    "object-property-newline": "off",
+    "one-var": "off",
+    "operator-linebreak": "off",
+    "semi": [
+      "error",
+      "always"
+    ],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "quotes": [
+      "error",
+      "single",
+      {
+        "allowTemplateLiterals": true,
+        "avoidEscape": true
+      }
+    ],
+    "yoda": [
+      "error",
+      "never",
+      {
+        "exceptRange": true
+      }
+    ]
+  }
+}

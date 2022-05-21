@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Browser Check</title>
+
+  <script src="browser-check.js" data-bc-globals data-bc-min-es="-1"></script>
+  <style>
+    body {
+      background-color: white;
+      color: black;
+      margin: 1em;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    document.write('User agent: ' + navigator.userAgent + '<br>\n');
+    navigator.platform && document.write('Platform: ' + navigator.platform + '<br>\n');
+    document.write('Browser: ' + window.tb_bc_info.browser + '<br>\n');
+    document.write('Browser version: ' + window.tb_bc_info.version + '<br>\n');
+    window.tb_bc_info.es && document.write('ECMAScript capability level: ' + window.tb_bc_info.es + '<br>\n');
+    window.tb_bc_info.msg && document.write('Message: ' + window.tb_bc_info.msg + '<br>\n');
+  </script>
+</body>
+</html>

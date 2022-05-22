@@ -28,7 +28,7 @@ Using **@tubular/browser-check**, you can specify a minimum ES level (6/2015, 20
 npm i -D @tubular/browser-check
 ```
 
-Since this code is meant as a pre-check process, not a bundled part of a web application itself, it makes the most sense to install it under `devDependencies`, not `dependencies`, then copy either `browser-check.js` or `browser-check.min.js` from `node_modules` as part of your build process. For example, here is how I’m using the script in an Angular project, as seen in a snippet from my `angular.json`:
+Since this code is meant to run as a pre-check process, and not to be a bundled part of a web application itself, it makes the most sense to install it under `devDependencies`, not `dependencies`, then copy either `browser-check.js` or `browser-check.min.js` from `node_modules` as part of your build process. For example, here is how I’m using the script in an Angular project, as seen in a snippet from my `angular.json` file:
 
 ```json5
 {
@@ -54,7 +54,7 @@ The script is pulled into the `<head>` section of the project’s `index.html` l
           data-bc-fail-url="assets/incompatible.html"></script>
 ```
 
-### Via unpkg.com
+### Using via unpkg.com
 
 ```html
   <script src="https://unpkg.com/@tubular/browser-check/dist/browser-check.min.js" type="text/javascript"
@@ -136,7 +136,7 @@ Not every ES feature is tested, of course, only a representative sample sufficie
   </tr>
   <tr>
     <td><code>regex2015</code></td>
-    <td>Unicode-aware regular expressions, with <code>u</code> flag</td>
+    <td>Unicode-aware regular expressions, with the <code>u</code> flag</td>
   </tr>
   <tr>
     <td><code>rest_param</code></td>
@@ -148,7 +148,7 @@ Not every ES feature is tested, of course, only a representative sample sufficie
   </tr>
   <tr>
     <td><code>symbol</code></td>
-    <td><code>Symbol</code>s</td>
+    <td><code>Symbol</code> objects are available</td>
   </tr>
   <tr>
     <td><code>template</code></td>
@@ -200,7 +200,7 @@ Not every ES feature is tested, of course, only a representative sample sufficie
   </tr>
   <tr>
     <td><code>rest_prop</code></td>
-    <td></td>
+    <td>Rest syntax for object properties, e.g. <code>let objClone = { ...obj }</code></td>
   </tr>
 
   <tr>
@@ -333,7 +333,7 @@ You can set this attribute to a comma-delimited list of minimum-supported browse
 * Chrome
 * Firefox
 * Safari
-* A minimum AppleWebKit version number for otherwise-unclassified non-Android, non-Linux browsers that specify an AppleWebKit version (quite likely running on iOS, using the same rendering engine as Safari).
+* A minimum AppleWebKit version number for otherwise-unclassified non-Android, non-Linux browsers which specify an AppleWebKit version (quite likely running on iOS, using the same rendering engine as Safari).
 
 You can use 0 as the version number for any browser you wish to completely disallow, and -1 for any browser you do not wish to check at all. (Any unspecified versions are treated as -1).
 

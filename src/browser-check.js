@@ -45,8 +45,10 @@
   var args = [];
 
   for (var i = 0; i < versionList.length && i < v.length; ++i) {
-    if (i < versionList.length)
-      args.push(parseFloat(versionList[i]));
+    if (i < versionList.length) {
+      var ver = trim(versionList[i] || '');
+      args.push(parseFloat(ver === '' ? '-1' : ver));
+    }
     else
       args.push(-1);
   }

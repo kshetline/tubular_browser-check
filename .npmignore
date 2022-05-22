@@ -1,5 +1,6 @@
 /.idea
 /src
 *.html
+!incompatible.html
 .eslint*
 rollup.config.js

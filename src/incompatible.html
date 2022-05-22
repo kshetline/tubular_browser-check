@@ -7,21 +7,25 @@
 <style>
   body {
     align-items: center;
-    background: #FDD;
+    background: #DBF;
     color: black;
+    font: 14px Arial, sans-serif;
     margin: 1em;
   }
 </style>
 </head>
 <body>
   <script>
-    var msg = (/\bmsg=([^&]*)/.exec(location.search) || [])[1];
+    try {
+      var msg = (/\bmsg=([^&]*)/.exec(location.search) || [])[1];
 
-    if (msg)
-      document.write('<p style="color: red">' + decodeURIComponent(msg) + '</p>');
+      if (msg)
+        document.write('<p style="color: red">' + decodeURIComponent(msg) + '</p>');
 
-    if (history.replaceState && location.href.indexOf('?') >= 0)
-        history.replaceState(undefined, undefined, location.href.replace(/\?.*$/, ''));
+      if (history.replaceState && location.href.indexOf('?') >= 0)
+          history.replaceState(undefined, undefined, location.href.replace(/\?.*$/, ''));
+    }
+    catch (e) {}
   </script>
   <p>Your web browser does not have the capabilities needed to run this website.</p>
 </body>

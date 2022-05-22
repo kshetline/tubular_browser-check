@@ -16,7 +16,7 @@ export default [
       terser({ output: { max_line_len: 511 } }),
       copy({
         targets: [
-          { src: 'src/browser-check.js', dest: 'dist/' }
+          { src: ['src/browser-check.js', 'src/incompatible.html'], dest: 'dist/' }
         ]
       })
     ],

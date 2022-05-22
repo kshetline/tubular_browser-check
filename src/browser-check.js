@@ -62,7 +62,7 @@
   var features = {};
   var lastFeatureTested = '';
   var za = ['0', '0', '0'];
-  var tb_bc_info = { browser: 'Unrecognized', version: null, es: 3, msg: '', otherFeatures: '' };
+  var tb_bc_info = { browser: 'Unrecognized', version: null, es: 0, msg: '', otherFeatures: '' };
   var featuresOpt = script.getAttribute('data-bc-features');
   var featureList = (featuresOpt ? split(featuresOpt, ',') : []);
   var featureCount = featureList.length;
@@ -182,6 +182,8 @@
   function tally(s) { tb_bc_info.otherFeatures += (tb_bc_info.otherFeatures ? ', ' : '') + (s || lastFeatureTested); }
 
   if (!tb_bc_info.msg || minEsVers || featureCount > 0) {
+    tb_bc_info.es = 3;
+
     try {
       var prom = (typeof Promise !== 'undefined' ? Promise : {});
 
@@ -207,6 +209,7 @@
         !(Array.from && [].keys && [].find && [].findIndex) && throwMsg('Missing array 2015 methods');
       (test('template') || minVers) && eval('let a = 5; let b =`x${a}y`;');
       (test('destructuring') || minVers) && eval('const [x, y] = [1, 2]');
+      (test('regex2015') || minVers) && eval('/\\u{1D306}/u.test(\'𝌆\')');
 
       if (minVers) { tb_bc_info.es = 2015; if (minVers === 2015) minVers = 0; }
 
@@ -215,9 +218,9 @@
 
       if (minVers) { tb_bc_info.es = 2016; if (minVers === 2016) minVers = 0; }
 
-      (test('string2017') || minVers) && !(''.padStart && ''.padEnd) && throwMsg('Missing string 2017 methods');
-      (test('object2017') || minVers) && !(Object.entries && Object.values) && throwMsg('Missing Object 2017 methods');
       (test('async') || minVers) && eval('async function foo() {}');
+      (test('object2017') || minVers) && !(Object.entries && Object.values) && throwMsg('Missing Object 2017 methods');
+      (test('string2017') || minVers) && !(''.padStart && ''.padEnd) && throwMsg('Missing string 2017 methods');
 
       if (minVers) { tb_bc_info.es = 2017; if (minVers === 2017) minVers = 0; }
 
@@ -229,9 +232,9 @@
       if (minVers) { tb_bc_info.es = 2018; if (minVers === 2018) minVers = 0; }
 
       (test('array2019') || minVers) && !([].flat && [].flatMap) && throwMsg('Missing array 2019 methods');
+      (test('catch_unbound') || minVers) && !('try { var a = 5; } catch {}');
       (test('object2019') || minVers) && !(Object.fromEntries) && throwMsg('Missing Object 2019 methods');
       (test('string2019') || minVers) && !(''.trimStart && ''.trimEnd) && throwMsg('Missing string 2019 methods');
-      (test('catch_unbound') || minVers) && !('try { var a = 5; } catch {}');
 
       if (minVers) { tb_bc_info.es = 2019; if (minVers === 2019) minVers = 0; }
 
@@ -338,7 +341,8 @@
   if (tb_bc_info.msg && url) {
     // Try to clear body and remove other scripts before forwarding to fail URL.
     try {
-      document.body.innerHTML = '';
+      if (document.body)
+        document.body.innerHTML = '';
 
       var scripts = document.querySelectorAll('script');
 

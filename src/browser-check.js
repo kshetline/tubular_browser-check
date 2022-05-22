@@ -355,6 +355,13 @@
     }
     catch (e) {}
 
+    if (url.charAt(0) !== '/' && !/^http(s?):/.test(url)) {
+      var baseTag = document.getElementsByTagName('base')[0];
+
+      if (baseTag && baseTag.href)
+        url = baseTag.href + url;
+    }
+
     location.href = url + '?msg=' + encodeURIComponent(tb_bc_info.msg);
   }
   else if (globals)

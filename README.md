@@ -64,6 +64,19 @@ The script is pulled into the `<head>` section of the project’s `index.html` l
 
 As always, the unpkg.com URL can include a specific npm package version if desired.
 
+### Internet Explorer issue
+
+Older versions of IE can be buggy handling `<base href=...`> tags. As a result, it’s possibly either the loading of this script, or the loading of your redirect page, might fail. The following code, placed after the `<base>` tag, and before the `<script>` tag, can fix that issue:
+
+```
+  <!--[if IE]><script type="text/javascript">
+    (function() { // Fix for IE ignoring relative base tags.
+        var baseTag = document.getElementsByTagName('base')[0];
+        baseTag.href = baseTag.href + '';
+    })();
+  </script><![endif]-->
+```
+
 ## Options
 
 Options are passed to **@tubular/browser-check** via various `data-bc-` attributes of the `<script>` tag.

@@ -8,7 +8,7 @@
       return Object.keys(obj).length;
 
     var count = 0;
-    for (var p in obj) { ++count; }
+    for (var p in obj) { ++count; } // eslint-disable-line no-unused-vars
     return count;
   }
 

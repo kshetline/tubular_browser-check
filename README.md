@@ -66,7 +66,7 @@ As always, the unpkg.com URL can include a specific npm package version if desir
 
 ### Internet Explorer issue
 
-Older versions of IE can be buggy handling `<base href=...`> tags. As a result, it’s possibly either the loading of this script, or the loading of your redirect page, might fail. The following code, placed after the `<base>` tag, and before the `<script>` tag, can fix that issue:
+Older versions of IE can be buggy handling `<base href=...`> tags. As a result, it’s possible either the loading of this script, or the loading of your redirect page, might fail. The following code, placed after the `<base>` tag, and before the `<script>` tag, can fix that issue:
 
 ```
   <!--[if IE]><script type="text/javascript">

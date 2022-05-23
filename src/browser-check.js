@@ -3,6 +3,15 @@
 
   function trim(s) { return !s ? s : s.trim ? s.trim() : s.replace(/^\s+/, '').replace(/\s+$/, ''); }
 
+  function keyCount(obj) {
+    if (Object.keys)
+      return Object.keys(obj).length;
+
+    var count = 0;
+    for (var p in obj) { ++count; } // eslint-disable-line no-unused-vars
+    return count;
+  }
+
   function split(s, delim) {
     if (!s)
       return s;
@@ -44,7 +53,7 @@
   versionList = versionList ? split(versionList, ',') : [];
   var args = [];
 
-  for (var i = 0; i < versionList.length && i < v.length; ++i) {
+  for (var i = 0; i < versionList.length && i < keyCount(v); ++i) {
     if (i < versionList.length) {
       var ver = trim(versionList[i] || '');
       args.push(parseFloat(ver === '' ? '-1' : ver));
@@ -183,7 +192,7 @@
   function test(name) { lastFeatureTested = name; return features[name]; }
   function tally(s) { tb_bc_info.otherFeatures += (tb_bc_info.otherFeatures ? ', ' : '') + (s || lastFeatureTested); }
 
-  if (!tb_bc_info.msg || minEsVers || featureCount > 0) {
+  if (!tb_bc_info.msg || minEsVers < 0 || ((minEsVers > 0 || featureCount > 0) && !tb_bc_info.msg)) {
     tb_bc_info.es = 3;
 
     try {
@@ -354,6 +363,13 @@
       }
     }
     catch (e) {}
+
+    if (url.charAt(0) !== '/' && !/^http(s?):/.test(url)) {
+      var baseTag = document.getElementsByTagName('base')[0];
+
+      if (baseTag && baseTag.href)
+        url = baseTag.href + url;
+    }
 
     location.href = url + '?msg=' + encodeURIComponent(tb_bc_info.msg);
   }

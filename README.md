@@ -348,9 +348,9 @@ You can set this attribute to a comma-delimited list of minimum-supported browse
 * Safari
 * A minimum AppleWebKit version number for otherwise-unclassified non-Android, non-Linux browsers which specify an AppleWebKit version (quite likely running on iOS, using the same rendering engine as Safari).
 
-You can use 0 as the version number for any browser you wish to completely disallow, and -1 for any browser you do not wish to check at all. (Any unspecified versions are treated as -1).
+You can use 0 as the version number for any browser you wish to completely disallow, and -1 for any browser you do not wish to check at all. (Any unspecified versions are treated as -1). Version numbers are treated as integers except for Safari version numbers, which can include a minor version number in X.Y form, such as 13.1.
 
-Ideally you can test for browser support without identifying particular browsers, using ES level and other features alone. But sometimes particular browser quirks and bugs must be considered.
+Ideally you can test for browser support without identifying particular browsers, using ES level and other feature checks alone. But sometimes particular browser quirks and bugs must be considered.
 
 I fully support, for example, `data-bc-vers="0,0"` as a common starting point, completely giving up on supporting Internet Explorer and all of the pre-Chromium versions of Microsoft’s Edge browser.
 

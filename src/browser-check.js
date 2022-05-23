@@ -36,9 +36,23 @@
     return result;
   }
 
+  function versionCompare(a, b) {
+    a = split(a, '.');
+    b = split(b, '.');
+
+    for (var i = 0; i < a.length || i < b.length; ++i) {
+      var diff = parseInt(a[i] || '0') - parseInt(b[i] || '0');
+
+      if (diff !== 0)
+        return diff;
+    }
+
+    return 0;
+  }
+
   function highlightVersion(agent, re, name, version) {
-    agent = agent.replace(re, '$1<span style="font-weight: bold; color: magenta;">$2$3</span>$4')
-      .replace(/\$[34]/g, '');
+    agent = agent.replace(re, '$1<span style="font-weight: bold; color: magenta;">$2</span>$3')
+      .replace(/\$3/g, '');
 
     return 'Your browser: ' + agent + '<br><br>\n' + name + ' version must be ' + version + ' or later';
   }
@@ -53,14 +67,8 @@
   versionList = versionList ? split(versionList, ',') : [];
   var args = [];
 
-  for (var i = 0; i < versionList.length && i < keyCount(v); ++i) {
-    if (i < versionList.length) {
-      var ver = trim(versionList[i] || '');
-      args.push(parseFloat(ver === '' ? '-1' : ver));
-    }
-    else
-      args.push(-1);
-  }
+  for (var i = 0; i < versionList.length || i < keyCount(v); ++i)
+    args.push(trim(versionList[i] || '-1'));
 
   if (minEsVers === 5)
     minEsVers = 2009;
@@ -72,7 +80,6 @@
   var globals = (globalsOpt === '' || /^1ty/i.test(globalsOpt || ''));
   var features = {};
   var lastFeatureTested = '';
-  var za = ['0', '0', '0'];
   var tb_bc_info = { browser: 'Unrecognized', version: null, es: 0, msg: '', otherFeatures: '' };
   var featuresOpt = script.getAttribute('data-bc-features');
   var featureList = (featuresOpt ? split(featuresOpt, ',') : []);
@@ -84,49 +91,49 @@
   (function () {
     var ua = navigator.userAgent;
     var re;
-    var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+)([.\d]+)?/;
-    var appleWebKitVersion = parseInt((awkRegex.exec(ua) || za)[2]);
-    var ieVersion = parseInt(((re = /(\bMSIE )(\d+)/).exec(ua) ||
-                              (re = /(\bWindows NT\b.+\brv:)(\d+)/).exec(ua) || za)[2]);
+    var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+(?:\.\d+)*)/;
+    var appleWebKitVersion = (awkRegex.exec(ua) || [])[2];
+    var ieVersion = ((re = /(\bMSIE )(\d+(?:\.\d+)*)/).exec(ua) ||
+                     (re = /(\bWindows NT\b.+\brv:)(\d+(?:\.\d+)*)/).exec(ua) || [])[2];
 
     if (/\b(Firefox|Chrome|HeadlessChrome)\b/.test(ua))
-      ieVersion = 0;
+      ieVersion = undefined;
 
     if (ieVersion) {
       tb_bc_info.browser = 'IE';
       tb_bc_info.version = ieVersion;
 
-      if (args[v.IE] === 0)
+      if (args[v.IE] === '0')
         tb_bc_info.msg = 'Internet Explorer is not supported';
-      else if (ieVersion && args[v.IE] > 0 && ieVersion < args[v.IE])
+      else if (ieVersion && args[v.IE] !== '-1' && versionCompare(ieVersion, args[v.IE]) < 0)
         tb_bc_info.msg = highlightVersion(ua, re, 'Internet Explorer', args[v.IE]);
 
       return;
     }
 
-    var legacyEdgeVersion = parseInt(((re = /(\bEdge\/)(\d+)([.\d]+)?/).exec(ua) || za)[2]);
+    var legacyEdgeVersion = ((re = /(\bEdge\/)(\d+(?:\.\d+)*)?/).exec(ua) || [])[2];
 
     if (legacyEdgeVersion) {
       tb_bc_info.browser = 'Legacy Edge';
       tb_bc_info.version = legacyEdgeVersion;
 
-      if (args[v.LegacyEdge] === 0)
+      if (args[v.LegacyEdge] === '0')
         tb_bc_info.msg = 'Legacy Edge is not supported';
-      else if (legacyEdgeVersion && args[v.LegacyEdge] > 0 && legacyEdgeVersion < args[v.LegacyEdge])
+      else if (args[v.LegacyEdge] !== '-1' && versionCompare(legacyEdgeVersion, args[v.LegacyEdge]) < 0)
         tb_bc_info.msg = highlightVersion(ua, re, 'Legacy Edge', args[v.LegacyEdge]);
 
       return;
     }
 
-    var chromeVersion = parseInt(((re = /(\b(?:Headless)?Chrome\/)(\d+)([.\d]+)?/).exec(ua) || za)[2]);
+    var chromeVersion = ((re = /(\b(?:Headless)?Chrome\/)(\d+(?:\.\d+)*)/).exec(ua) || [])[2];
 
     if (chromeVersion) {
       tb_bc_info.browser = 'Chrome';
       tb_bc_info.version = chromeVersion;
 
-      if (args[v.Chrome] === 0)
+      if (args[v.Chrome] === '0')
         tb_bc_info.msg = 'Chrome is not supported, nor related Chromium-derived browsers';
-      else if (chromeVersion && args[v.Chrome] > 0 && chromeVersion < args[v.Chrome])
+      else if (args[v.Chrome] !== '-1' && versionCompare(chromeVersion, args[v.Chrome]) < 0)
         tb_bc_info.msg = highlightVersion(ua, re, 'Chrome', args[v.Chrome]);
 
       if (navigator.userAgentData && navigator.userAgentData.brands && navigator.userAgentData.brands.length > 1) {
@@ -150,36 +157,36 @@
       return;
     }
 
-    var firefoxVersion = parseInt(((re = /(\bFirefox\/)(\d+)([.\d]+)?/).exec(ua) || za)[2]);
+    var firefoxVersion = ((re = /(\bFirefox\/)(\d+(?:\.\d+)*)/).exec(ua) || [])[2];
 
     if (firefoxVersion) {
       tb_bc_info.browser = 'Firefox';
       tb_bc_info.version = firefoxVersion;
 
-      if (args[v.Firefox] === 0)
+      if (args[v.Firefox] === '0')
         tb_bc_info.msg = 'Firefox is not supported';
-      else if (firefoxVersion && args[v.Firefox] > 0 && firefoxVersion < args[v.Firefox])
+      else if (args[v.Firefox] !== '-1' && versionCompare(firefoxVersion, args[v.Firefox]) < 0)
         tb_bc_info.msg = highlightVersion(ua, re, 'Firefox', args[v.Firefox]);
 
       return;
     }
 
-    var safariVersion = parseFloat(((re = /(\bVersion\/)(\d+(?:\.\d+)?)([.\d]+)?(.*\bSafari\/\d+)/).exec(ua) || za)[2]);
+    var safariVersion = ((re = /(\bVersion\/)(\d+(?:\.\d+)*)(.*\bSafari\/\d+)/).exec(ua) || [])[2];
 
     if (/\b(Android|Linux)\b/.test(ua))
-      safariVersion = 0;
+      safariVersion = undefined;
 
     if (safariVersion || appleWebKitVersion) {
       tb_bc_info.browser = safariVersion ? 'Safari' : 'AppleWebKit';
       tb_bc_info.version = safariVersion || appleWebKitVersion;
 
-      if (args[v.Safari] === 0)
+      if (args[v.Safari] === '0')
         tb_bc_info.msg = 'Safari is not supported';
-      else if (args[v.AppleWebKit] === 0)
+      else if (args[v.AppleWebKit] === '0')
         tb_bc_info.msg = 'AppleWebKit browsers are not supported';
-      else if (safariVersion && args[v.Safari] > 0 && safariVersion < args[v.Safari])
+      else if (safariVersion && args[v.Safari] !== '-1' && versionCompare(safariVersion, args[v.Safari]) < 0)
         tb_bc_info.msg = highlightVersion(ua, re, 'Safari', args[v.Safari]);
-      else if (appleWebKitVersion && args[v.AppleWebKit] > 0 && appleWebKitVersion < args[v.AppleWebKit])
+      else if (appleWebKitVersion && args[v.AppleWebKit] !== '-1' && versionCompare(appleWebKitVersion, args[v.AppleWebKit]) < 0)
         tb_bc_info.msg = highlightVersion(ua, awkRegex, 'AppleWebKit/Safari', args[v.AppleWebKit]);
 
       if (/\bCriOS\b/.test(ua))

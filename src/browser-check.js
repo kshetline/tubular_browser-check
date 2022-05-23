@@ -84,8 +84,8 @@
   (function () {
     var ua = navigator.userAgent;
     var re;
-    var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+)([.\d]+)?/.exec(ua);
-    var appleWebKitVersion = awkRegex ? parseInt(awkRegex[2]) : 0;
+    var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+)([.\d]+)?/;
+    var appleWebKitVersion = parseInt((awkRegex.exec(ua) || za)[2]);
     var ieVersion = parseInt(((re = /(\bMSIE )(\d+)/).exec(ua) ||
                               (re = /(\bWindows NT\b.+\brv:)(\d+)/).exec(ua) || za)[2]);
 
@@ -179,7 +179,7 @@
         tb_bc_info.msg = 'AppleWebKit browsers are not supported';
       else if (safariVersion && args[v.Safari] > 0 && safariVersion < args[v.Safari])
         tb_bc_info.msg = highlightVersion(ua, re, 'Safari', args[v.Safari]);
-      else if (safariVersion && args[v.AppleWebKit] > 0 && safariVersion < args[v.AppleWebKit])
+      else if (appleWebKitVersion && args[v.AppleWebKit] > 0 && appleWebKitVersion < args[v.AppleWebKit])
         tb_bc_info.msg = highlightVersion(ua, awkRegex, 'AppleWebKit/Safari', args[v.AppleWebKit]);
 
       if (/\bCriOS\b/.test(ua))

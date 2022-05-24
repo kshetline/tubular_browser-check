@@ -5,7 +5,6 @@
   "extends": [
     "standard"
   ],
-  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 5,
     "sourceType": "script"
@@ -34,7 +33,6 @@
     "no-eval": "off",
     "no-labels": "off",
     "no-mixed-operators": "off",
-    "no-multi-spaces": "off",
     "no-new": "off",
     "no-return-assign": "off",
     "no-template-curly-in-string": "off",

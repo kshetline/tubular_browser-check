@@ -1,6 +1,6 @@
 {
   "name": "@tubular/browser-check",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Check for compatibility of browser versions and features",
   "author": "Kerry Shetline <kerry@shetline.com>",
   "license": "MIT",

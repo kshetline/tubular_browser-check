@@ -284,7 +284,7 @@ Not every ES feature is tested, of course, only a representative sample sufficie
 
 ### `data-bc-features`
 
-A comma-delimited list of browser features that you want to check and require. They can be any of the above ES feature tests, or from the list of other browser features below. Use the test `other` to compile a full list of all of the features listed below that a browser supports.
+A comma-delimited list of browser features that you want to check and require. They can be any of the above ES feature tests, or from the list of other browser features below. Use the test `other` to compile a full list of all the features listed below that a browser supports.
 
 <table>
   <tr>
@@ -348,11 +348,11 @@ You can set this attribute to a comma-delimited list of minimum-supported browse
 * Safari
 * A minimum AppleWebKit version number for otherwise-unclassified non-Android, non-Linux browsers which specify an AppleWebKit version (quite likely running on iOS, using the same rendering engine as Safari).
 
-You can use 0 as the version number for any browser you wish to completely disallow, and -1 for any browser you do not wish to check at all. (Any unspecified versions are treated as -1). Version numbers are treated as integers except for Safari version numbers, which can include a minor version number in X.Y form, such as 13.1.
+You can use 0 as the version number for any browser you wish to completely disallow, and -1 for any browser you do not wish to check at all. (Any unspecified versions are treated as -1). Version numbers can include multiple dot-delimited version fields, such as 13.1 or 101.0.4951.64. Qualifiers such as `-beta` are not handled.
 
 Ideally you can test for browser support without identifying particular browsers, using ES level and other feature checks alone. But sometimes particular browser quirks and bugs must be considered.
 
-I fully support, for example, `data-bc-vers="0,0"` as a common starting point, completely giving up on supporting Internet Explorer and all of the pre-Chromium versions of Microsoft’s Edge browser.
+I fully support, for example, `data-bc-vers="0,0"` as a common starting point, completely giving up on supporting Internet Explorer and all the pre-Chromium versions of Microsoft’s Edge browser.
 
 Many browsers, such as Opera, Samsung, and the latest versions of Microsoft Edge, are based on the same Chromium core engine as Google Chrome. These browsers are treated as variants of Chrome, and their Chrome version is what will matter, not their various browser-specific version numbers.
 
@@ -365,7 +365,7 @@ Set this attribute to `true` (or simply add the attribute as a flag attribute wi
 ```json5
 {
   browser: "Chrome", // Name or description of browser, possibly "Unrecognized"
-  version: 101, // Browser version, if determined
+  version: "101.0.4951.64", // Browser version, if determined
   es: 2021, // ES specification passed. 0 if never checked, minimum value of 3 if checked
   otherFeatures: "audio, av_input... workers", // Any tests successfully passed beyond the ES level check tests.
   msg: "" // If any tests have failed, the message describing that failure.

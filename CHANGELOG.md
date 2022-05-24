@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Full version checking (not just major version comparison) for all browsers.
+
 ## 1.0.3
 
 * Fix AppleWebKit detection problem.

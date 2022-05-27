@@ -2,11 +2,16 @@
 
 ## (The Art of Giving Up Gracefully)
 
+* Check web browser’s level of JavaScript support (ES5, ES2015, etc.).
+* Check for specific capabilities, like grid layout and WebGL2.
+* Check for minimum release version of various browsers, or rule out specific web browsers (like Internet Explorer) entirely.
+* Forward users to a friendly warning page when their browser doesn’t meet requirements.
+
 As a web developer you likely know the pain of wanting to use flashy new web browser features, but feeling like you have to hold back until very few users will be inconvenienced by any browser incompatibilities that might arise from using the latest and greatest features that browsers have to offer.
 
 Fortunately these days, a majority of web users have switched to “evergreen” browsers which frequently self-update, allowing you to employ new features of JavaScript, HTML, and CSS with reasonable confidence.
 
-There are still, however, even at the time I’m writing this documentation (May 2022), people clinging to Windows 7. There are users with old desktops and mobile devices with limited capacity for updates and upgrades. Ideally, instead of leaving such users out in the cold, you selectively downgrade the capabilities of your websites a little, still providing most of the desired experience on older browsers &mdash; perhaps a little less stylishly, without all the bells and whistles.
+There are still, however, people clinging to Windows 7 and IE. There are users with old desktops and mobile devices with limited capacity for updates and upgrades. Ideally, instead of leaving such users out in the cold, you selectively downgrade the capabilities of your websites a little, still providing most of the desired experience on older browsers &mdash; perhaps a little less stylishly, without all the bells and whistles.
 
 There are times, however, when only relatively up-to-date web browsers will do. There need to be some cut-off points, below which you have to say to your users (much more diplomatically, of course) they are 💩 out of luck trying to get by with an older web browser.
 

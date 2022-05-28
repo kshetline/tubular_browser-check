@@ -57,9 +57,11 @@
     return 'Your browser: ' + agent + '<br><br>\n' + name + ' version must be ' + version + ' or later';
   }
 
-  var script = document.currentScript || document.querySelector('script[data-bc-vers]') ||
-    document.querySelector('script[data-bc-min-es]') || document.querySelector('script[data-bc-globals]') ||
-    document.querySelector('script[data-bc-features]');
+  var script = document.currentScript || document.getElementById('tb-browser-check') ||
+    document.getElementById('tubular-browser-check') || (document.querySelector &&
+      (document.querySelector('script[data-bc-vers]') ||
+       document.querySelector('script[data-bc-min-es]') || document.querySelector('script[data-bc-globals]') ||
+       document.querySelector('script[data-bc-features]')));
   var url = script.getAttribute('data-bc-fail-url');
   var minEsVers = parseInt(script.getAttribute('data-bc-min-es') || '0');
   var v = { IE: 0, LegacyEdge: 1, Chrome: 2, Firefox: 3, Safari: 4, AppleWebKit: 5 };

@@ -1,3 +1,7 @@
+## 1.2.0
+
+* Added ability to mark the browser check script tag using `id` (`id="tb-browser-check"`) so that browsers too old to support `querySelector` can be tested. (Some old versions of IE support `querySelector`, but lose that support when running in quirks mode.) 
+
 ## 1.1.0
 
 * Full version checking (not just major version comparison) for all browsers.

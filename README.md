@@ -55,14 +55,18 @@ The script is pulled into the `<head>` section of the project’s `index.html` l
 
 ```html
   <script src="assets/browser-check.min.js" type="text/javascript"
+          id="tb-browser-check"
           data-bc-vers="0,79,79,13.1,605" data-bc-min-es="2017"
           data-bc-fail-url="assets/incompatible.html"></script>
 ```
+
+The `id` is important so that very old browsers that don’t support `querySelector` can locate the script tag using `getElementById`. An alternative id value is `"tubular-browser-check"`.
 
 ### Using via unpkg.com
 
 ```html
   <script src="https://unpkg.com/@tubular/browser-check/dist/browser-check.min.js" type="text/javascript"
+          id="tb-browser-check"
           data-bc-vers="0,79,79,13.1,605" data-bc-min-es="2017"
           data-bc-fail-url="assets/incompatible.html"></script>
 ```

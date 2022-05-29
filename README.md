@@ -380,3 +380,7 @@ Set this attribute to `true` (or simply add the attribute as a flag attribute wi
   msg: "" // If any tests have failed, the message describing that failure.
 }
 ```
+
+## Skipping over browser check
+
+Add the parameter `tb-bc-skip=true` to a URL to skip over browser checking when a web page loads.

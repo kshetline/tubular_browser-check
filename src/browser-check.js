@@ -1,4 +1,7 @@
 (function () {
+  if (/\btb-bc-skip=true\b/.test(location.href))
+    return;
+
   function throwMsg(s) { throw s; }
 
   function trim(s) { return !s ? s : s.trim ? s.trim() : s.replace(/^\s+/, '').replace(/\s+$/, ''); }

@@ -264,7 +264,7 @@
       (test('null_ops') || minVers) && !eval('null?.a; undefined ?? 7;');
       (test('bigint') || minVers) && eval('123n + 456n;');
       (test('all_settled') || minVers) && !prom.allSettled && throwMsg('Missing Promise.allSettled');
-      (test('global_this') || minVers) && globalThis !== window && throwMsg('Missing Promise.global_this');
+      (test('global_this') || minVers) && globalThis !== window && throwMsg('Missing globalThis');
 
       if (minVers) { tb_bc_info.es = 2020; if (minVers === 2021) minVers = 0; }
 

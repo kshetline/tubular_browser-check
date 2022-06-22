@@ -1,3 +1,7 @@
+## 2.0.0
+
+* Special handling for Googlebot so that, by default, GoogleBot is not turned away.
+
 ## 1.3.0
 
 * Add `tb-bc-skip=true` URL parameter option to skip over browser check.

@@ -66,11 +66,14 @@
        document.querySelector('script[data-bc-min-es]') || document.querySelector('script[data-bc-globals]') ||
        document.querySelector('script[data-bc-features]')));
   var url = script.getAttribute('data-bc-fail-url');
+  var googlebotMode = (script.getAttribute('data-bc-googlebot') || 'A').toUpperCase().charAt(0);
   var minEsVers = parseInt(script.getAttribute('data-bc-min-es') || '0');
   var v = { IE: 0, LegacyEdge: 1, Chrome: 2, Firefox: 3, Safari: 4, AppleWebKit: 5 };
   var versionList = script.getAttribute('data-bc-vers');
   versionList = versionList ? split(versionList, ',') : [];
   var args = [];
+  var ua = navigator.userAgent;
+  var googlebot = /\bgooglebot\b/i.test(ua) && googlebotMode !== 'I';
 
   for (var i = 0; i < versionList.length || i < keyCount(v); ++i)
     args.push(trim(versionList[i] || '-1'));
@@ -94,7 +97,6 @@
     features[trim(featureList[i])] = true;
 
   (function () {
-    var ua = navigator.userAgent;
     var re;
     var awkRegex = /(\b(?:AppleWebKit|Safari)\/)(\d+(?:\.\d+)*)/;
     var appleWebKitVersion = (awkRegex.exec(ua) || [])[2];
@@ -264,7 +266,7 @@
       (test('null_ops') || minVers) && !eval('null?.a; undefined ?? 7;');
       (test('bigint') || minVers) && eval('123n + 456n;');
       (test('all_settled') || minVers) && !prom.allSettled && throwMsg('Missing Promise.allSettled');
-      (test('global_this') || minVers) && globalThis !== window && throwMsg('Missing Promise.global_this');
+      (test('global_this') || minVers) && globalThis !== window && throwMsg('Missing globalThis');
 
       if (minVers) { tb_bc_info.es = 2020; if (minVers === 2021) minVers = 0; }
 
@@ -360,6 +362,11 @@
 
   if (!tb_bc_info.msg && minEsVers > 0 && tb_bc_info.es < minEsVers)
     tb_bc_info.msg = 'Insufficient ES level. Needed: ' + minEsVers + ', found: ' + tb_bc_info.es;
+
+  if (googlebot && googlebotMode === 'A')
+    tb_bc_info.msg = undefined;
+  else if (googlebot && googlebotMode === 'N')
+    tb_bc_info.msg = 'Googlebot is not supported';
 
   if (tb_bc_info.msg && url) {
     // Try to clear body and remove other scripts before forwarding to fail URL.

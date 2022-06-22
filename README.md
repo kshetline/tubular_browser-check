@@ -381,6 +381,10 @@ Set this attribute to `true` (or simply add the attribute as a flag attribute wi
 }
 ```
 
+### `data-bc-googlebot`
+
+By default, this option is A(lways), allowing Googlebot access all the time. Option (N)ever turns Googlebot away in all circumstances. Option (I)gnore makes Googlebot immaterial, so that all other tests function as normal. 
+
 ## Skipping over browser check
 
 Add the parameter `tb-bc-skip=true` to a URL to skip over browser checking when a web page loads.

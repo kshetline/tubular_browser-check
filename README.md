@@ -282,14 +282,45 @@ Not every ES feature is tested, of course, only a representative sample sufficie
   </tr>
 
   <tr>
-    <th colspan=2>ES2022&#42; tests</th>
+    <th colspan=2>ES2022 tests</th>
+  </tr>
+  <tr>
+    <td><code>private_fields</code></td>
+    <td>Classes can have private fields, marked by #</td>
+  </tr>
+  <tr>
+    <td><code>private_accessors</code></td>
+    <td>Classes can have private accessors, marked by #</td>
+  </tr>
+  <tr>
+    <td><code>static_fields</code></td>
+    <td>Classes can have static fields</td>
+  </tr>
+  <tr>
+    <td><code>static_methods</code></td>
+    <td>Classes can have static methods</td>
+  </tr>
+  <tr>
+    <td><code>static_init</code></td>
+    <td>Classes can have static initializers</td>
+  </tr>
+  <tr>
+    <td><code>array_at</code></td>
+    <td>Array at(<i>index</i>) function available</td>
+  </tr>
+  <tr>
+    <td><code>error_cause</code></td>
+    <td>Error class can be initialized with a cause</td>
+  </tr>
+  <tr>
+    <td><code>has_own</code></td>
+    <td>Object.hasOwn() function available</td>
   </tr>
   <tr>
     <td><code>regex2022</code></td>
     <td>Regular expression <code>d</code> flag, providing start and end positions for matched groups</td>
   </tr>
 </table>
-<span>&#42;<i>ES2022 specification is incomplete. No browser will yet be ranked at this level.</i></span>
 
 ### `data-bc-features`
 

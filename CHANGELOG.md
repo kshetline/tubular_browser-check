@@ -1,3 +1,7 @@
+## 1.4.0
+
+* Add ES2022 tests.
+
 ## 1.3.0
 
 * Add `tb-bc-skip=true` URL parameter option to skip over browser check.

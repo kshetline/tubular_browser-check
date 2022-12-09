@@ -1,6 +1,10 @@
-## 1.4.0
+## 2.1.0
 
 * Add ES2022 tests.
+
+## 2.0.0
+
+* Special handling for Googlebot so that, by default, GoogleBot is not turned away.
 
 ## 1.3.0
 

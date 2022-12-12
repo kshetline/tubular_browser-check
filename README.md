@@ -2,14 +2,14 @@
 
 ## (The Art of Giving Up Gracefully)
 
-* Check web browser’s level of JavaScript support (ES5, ES2015, etc.).
+* Check web browser’s level of JavaScript support (ES5, ES2015, ES2020, etc.).
 * Check for specific capabilities, like grid layout and WebGL2.
 * Check for minimum release version of various browsers, or rule out specific web browsers (like Internet Explorer) entirely.
 * Forward users to a friendly warning page when their browser doesn’t meet requirements.
 
-As a web developer you likely know the pain of wanting to use flashy new web browser features, but feeling like you have to hold back until very few users will be inconvenienced by any browser incompatibilities that might arise from using the latest and greatest features that browsers have to offer.
+As a web developer you likely know the pain of wanting to take advantage of useful new web browser features, but feeling like you have to hold back until very few users will be inconvenienced or excluded by browser incompatibilities which might arise from using the latest and greatest features that browsers have to offer.
 
-Fortunately these days, a majority of web users have switched to “evergreen” browsers which frequently self-update, allowing you to employ new features of JavaScript, HTML, and CSS with reasonable confidence.
+Fortunately these days a majority of web users have switched to “evergreen” browsers which frequently self-update, allowing you to employ new features of JavaScript, HTML, and CSS with reasonable confidence.
 
 There are still, however, people clinging to Windows 7 and IE. There are users with old desktops and mobile devices with limited capacity for updates and upgrades. Ideally, instead of leaving such users out in the cold, you selectively downgrade the capabilities of your websites a little, still providing most of the desired experience on older browsers &mdash; perhaps a little less stylishly, without all the bells and whistles.
 
@@ -19,13 +19,13 @@ Preferably this message of misfortune will be conveyed gracefully, not left to t
 
 This is where **@tubular/browser-check** comes in.
 
-This is a script written in lowest-common-denominator JavaScript (requiring nothing that cannot be done under the ancient standard of ES3) for assessing what a web browser is or is not capable of, providing an opportunity to redirect to an incompatibility message page when needed.
+This is a script written in lowest-common-denominator JavaScript (requiring nothing that cannot be done when constrained by the ancient standard of ES3) for assessing what a web browser is or is not capable of, providing an opportunity to redirect to an incompatibility message page when needed.
 
 Using **@tubular/browser-check**, you can specify a minimum ES level (6/2015, 2016, 2017, etc.), particular features required (such as grid layout or WebGL), and/or minimum version numbers for popular web browsers. You can also rule out some web browsers (such as Internet Explorer and pre-Chromium Legacy Edge) entirely.
 
 ## Installation/Use
 
-**@tubular/browser-check** should be invoked via a `<script>` tag, before any other possibly incompatible JavaScript has a chance to run. This likely means being the first, or close to the first, script in the `<head>` section of a web page.
+**@tubular/browser-check** should be invoked via a `<script>` tag, before any other (possibly incompatible) JavaScript has a chance to run. This likely means being the first, or close to the first, script in the `<head>` section of a web page.
 
 ### Using npm
 
@@ -60,7 +60,7 @@ The script is pulled into the `<head>` section of the project’s `index.html` l
           data-bc-fail-url="assets/incompatible.html"></script>
 ```
 
-The `id` is important so that very old browsers that don’t support `querySelector` can locate the script tag using `getElementById`. An alternative id value is `"tubular-browser-check"`.
+The `id` is important so that very old browsers which don’t support `querySelector` can locate the script tag using `getElementById`. An alternative id value is `"tubular-browser-check"`.
 
 ### Using via unpkg.com
 

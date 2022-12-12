@@ -276,7 +276,21 @@
 
       if (minVers) { tb_bc_info.es = 2021; if (minVers === 2021) minVers = 0; }
 
+      (test('private_fields') || minVers) && eval('class Test { #foo = "bar"; }');
+      (test('private_accessors') || minVers) && eval('class Test { get #foo() { return "bar"; } }');
+      (test('static_fields') || minVers) && eval('class Test { static foo = "bar"; }');
+      (test('static_methods') || minVers) && eval('class Test { static foo() { return "bar"; } }');
+      (test('static_init') || minVers) && eval('class Test { static foo; static { this.foo = Math.random(); } }');
+      (test('array_at') || minVers) && eval('[1, 2, 3].at(-1)');
+      // noinspection JSCheckFunctionSignatures
+      (test('error_cause') || minVers) &&
+        (((new Error('oops', { cause: new Error('other') })).cause || {}).message === 'other' ||
+         throwMsg('Missing error.cause'));
+      (test('has_own') || minVers) && (eval('Object.hasOwn({ foo: 5 }, "foo") && !Object.hasOwn({ foo: 5 }, "bar")') ||
+        throwMsg('Missing Object.hasOwn()'));
       (test('regex2022') || minVers) && eval('/(\\bB\\b).*(\\bD\\b)/d.exec("A B C D E")');
+
+      if (minVers) { tb_bc_info.es = 2022; if (minVers === 2022) minVers = 0; }
     }
     catch (e) {
       tb_bc_info.msg = tb_bc_info.msg || (minVers > 0 ? '' :
